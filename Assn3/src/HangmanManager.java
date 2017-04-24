@@ -1,5 +1,14 @@
 /**
- * NEED TO FINISH JAVADOCS
+ * This class instantiates a basic Animal object with a name, x/y coordinate values,
+ * and a max speed. It is used in the AnimalMain class
+ *
+ * @author                  Jacob Landowski
+ * @version                 %I% %G%
+ * @since                    1.0
+ *
+ *
+ *
+ * javadoc -d doc -tag pre:cm:"Precondition: " -tag post:cm:"Postcondition: " *.java
  */
 
 import java.util.*;
@@ -11,6 +20,19 @@ public class HangmanManager
     private String curPattern;
     private int guessesRemaining;
     
+    /**
+     * Default constructor that takes a List of words to use for hangman,
+     * an int length to decide which length words to pick from, and int max
+     * to track how many guesses are remaining.
+     *
+     * @param dictionary        the list of words to create the initial set of words
+     * @param length            the length of the words to intially pick from
+     * @param max               the remaining amount of guesses to start with
+     * @throws                  IllegalArgumentException if length &lt; 1 or max &lt; 0
+     * @pre                     List must not be empty.
+     * @pre                     length &gt; 0
+     * @pre                     max &gt;= 0
+     */
     public HangmanManager(List<String> dictionary, int length, int max)
     {
         if(length < 1 || max < 0) throw new IllegalArgumentException();
@@ -21,27 +43,63 @@ public class HangmanManager
         initializeSet(dictionary, length);
     }
     
+    /**
+     * Returns the current set of words being used for guessing.
+     *
+     * @return                  curSet
+     * @post                    list.size() &gt; 0
+     */
     public Set<String> words()
     {
         return curSet;
     }
     
+    
+    /**
+     * Returns the current guesses remaining for the player.
+     *
+     * @return                  guessesRemaining
+     * @post                    guessesRemaining &gt;= 0
+     */
     public int guessesLeft()
     {
         return guessesRemaining;
     }
     
+    /**
+     * Returns a sorted set of characters already guessed by the player.
+     *
+     * @return                  guessed
+     */
     public SortedSet<Character> guesses()
     {
         return guessed;
     }
     
+    /**
+     * Returns the pattern string with white space seperating each character ex: "- e - -" instead of "-e--".
+     *
+     * @throws                  IllegalStateException if current set of words is empty (size &lt; 0)
+     * @return                  current pattern string with characters seperated by whitespace
+     * @post                    String characters are space seperated with no beginning or trailing space
+     */
     public String pattern()
     {
         errIfEmpty();
         return expandedPattern();
     }
     
+    /**
+     * Takes a guessed character, archives it in the guessed sorted set, checks if already guessed,
+     * then chooses the new set of words to use and returns the number of occurences of the guessed
+     * character, either 0 or more.
+     *
+     * @param guess             the character guessed by the player
+     * @throws                  IllegalArgumentException if char guessed is was already guessed
+     * @return                  the number of occurences of the guessed character (int 0 or more)
+     * @pre                     Character must be lower-case
+     * @post                    returned occurences &gt;= 0
+     */
     public int record(char guess)
     {
         errIfSameGuess(guess);
@@ -59,11 +117,11 @@ public class HangmanManager
 //=================================================================
     
     
-        //  CREATE MAP WITH ALL PATTERNS AND THEIR NUMBER OF MATCHED WORDS
-        //  FIND MOST POPULAR PATTERN
-        //  UPDATE CURRENT DISPLAY PATTERN
-        //  UPDATE CURRENT SET WITH WORDS MATCHING NEW PATTERN
-        //  RETURN NUMBER OF OCCURENCES OF NEW PATTERN
+        //  1 : CREATE MAP WITH ALL PATTERNS AND THEIR NUMBER OF MATCHED WORDS
+        //  2 : FIND MOST POPULAR PATTERN
+        //  3 : UPDATE CURRENT DISPLAY PATTERN
+        //  4 : UPDATE CURRENT SET WITH WORDS MATCHING NEW PATTERN
+        //  5 : RETURN NUMBER OF OCCURENCES OF NEW PATTERN
     private int chooseNextSet(char guess)
     {
         Map<String, Integer> patterns = new TreeMap<String, Integer>();
