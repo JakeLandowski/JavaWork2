@@ -3,6 +3,8 @@ import java.util.TreeMap;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.SortedSet;
+import java.util.Random;
 
 import java.util.Arrays;
 /* DEBUGGING PRINT MAP WITH ARRAYS IN IT
@@ -46,6 +48,7 @@ for(String key : ruleMap.keySet())
 public class GrammarSolver
 {
     Map<String, String[][]> ruleMap = new TreeMap<String, String[][]>();
+    Random rand; // GLOBAL RAND TO AVOID RE-SEEDS
     
     /**
      * Default constructor
@@ -60,40 +63,32 @@ public class GrammarSolver
      */
     public GrammarSolver(List<String> rules)
     {
-        populateMap(rules);
-    
-        // rules is a list of each line in the file
-        // create a map of the rules, non-terminals as keys
-        // value will be a, array of each non-terminal or terminal
-        //      associated with the initial non-terminal
+        rand = new Random();
+        populateMap(rules); // throws IllegalArgumentException if duplicate NonTerminal
         
-        // throw IllegalArgumentException if list null or size 0
-        // throw IllegalArgumentException if grammar contains more
-        //      than 1 line for same non-terminal, basically same key
+        if(rules == null || rules.size() < 1) throw new IllegalArgumentException();
     }
     
     public boolean contains(String symbol)
     {
         // return true if symbol asked for exists as key in map
         // throw IllegalArgumentException if string null or length < 0
-        return true;
+        if(symbol == null || symbol.length() < 1) throw new IllegalArgumentException();
+        return ruleMap.containsKey(symbol);
     }
     
     public Set<String> getSymbols()
     {
-        // return sorted set of strings of map keyset, the non-terminals
-        //      available.
-        // use TreeMap so keyset is sorted when we return it?
-        return new TreeSet<String>();
+        return ruleMap.keySet();
     }
     
     public String generate(String symbol)
     {
-        // randomly and recursively generate lines based on grammar
-        // if symbol given is terminal and not in key (which shouldnt happen because of contains)
-        //      simply return it back
-        // throw IllegalArgumentException if string is null or length < 0
-        return "";
+            //  IF SYMBOL IS NOT KEY RETURN IT, SHOULDNT HAPPEN THOUGH B/C OF CONTAINS()
+        if(symbol == null || symbol.length() < 1) throw new IllegalArgumentException();
+        else if(!ruleMap.containsKey(symbol)) return symbol;
+        
+        return pickRandomWord(ruleMap.get(symbol));
     }
     
 //=================================================================
@@ -111,6 +106,7 @@ public class GrammarSolver
             
                 //  EX: "<derp>"
             String nonTerm = firstSplit[0].trim();
+            if(ruleMap.containsKey(nonTerm)) throw new IllegalArgumentException();
             
                 //  EX: "durr | hurr durr | <blah> <dah>"
             String terms   = firstSplit[1];
@@ -137,6 +133,28 @@ public class GrammarSolver
                 //  PLACE PROCESSED LINE IN MAP
             ruleMap.put(nonTerm, fullTerminals);
         }
+    }
+    
+    private String pickRandomWord(String[][] terminals)
+    {
+        String phrase = "";
+        int num = rand.nextInt(terminals.length);
+        
+        String[] term = terminals[num];
+        
+        for(int i = 0; i < term.length; i++)
+        {
+            if(ruleMap.containsKey(term[i]))
+            {
+                phrase += pickRandomWord(ruleMap.get(term[i]));
+            }
+            else
+            {
+                phrase += term[i] + " ";
+            }
+        }
+        
+        return phrase;
     }
 
 }
