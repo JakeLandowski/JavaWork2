@@ -17,7 +17,8 @@ import java.util.TreeMap;
 
 
 /**
- * This class...
+ * This class manages the anagram data structure for a dictionary of words, as well as serving
+ * requests for anagrams.
  *
  * @author                  Jacob Landowski
  * @version                 %I% %G%
@@ -30,24 +31,20 @@ public class AnagramManager
     Random rand;
     
     /**
-     * Constructor, takes an unmodifiable list of grammar lines and creates a rule map
-     * out of it, initializes GrammarSolver's random object.
+     * Constructor, takes an unmodifiable list of words and instantiates a Word object
+     * for each, stored in an array. Initializes a map of canonical words to sets of
+     * their matching anagrams. Initializes a random object.
      *
-     * @param rules             The list of grammar lines used to populate the ruleMap
+     * @param listOfWords       A List of strings passed to AnagramManager
      * @throws                  IllegalArgumentException if list is null or list length &lt; 1
-     * @pre                     List elements must be seperate lines of grammar rules, starting
-     *                          with the non-terminal follow by ::= and its terminals, each AND
-     *                          terminal must be seperated by whitespace and each OR terminal
-     *                          seperated by pipes (|). If non-terminal references itself as a
-     *                          terminal, must include a way to end the loop eventually, such as
-     *                          giving another terminal option with a pipe (|).
      * @pre                     List must not be empty
      * @pre                     List must not be null
-     * @post                    Instantiates a GrammarSolver object with initialized rule map
+     * @post                    Instantiates an AnagramManager object with initialized Word array
+     *                          and anagram map
      */
     public AnagramManager(List<String> listOfWords)
     {
-        if(listOfWords == null || listOfWords.size() < 0) throw new IllegalArgumentException();
+        if(listOfWords == null || listOfWords.size() < 1) throw new IllegalArgumentException();
         
         rand = new Random();
         words = new Word[ listOfWords.size() ];
@@ -58,13 +55,7 @@ public class AnagramManager
     }
     
     /**
-     * Checks to see if the entered symbol exists in the rule map, returns true if so.
-     *
-     * @param symbol            The non-terminal string entered by the user
-     * @throws                  IllegalArgumentException if symbol is null or list length &lt; 1
-     * @return                  True if symbol is a Non-Terminal, false otherwise
-     * @pre                     String must not be empty
-     * @pre                     String must not be null
+     * Sorts the internal array of Word objects by their original alphabetical ordering.
      */
     public void sortByWord()
     {
@@ -74,9 +65,7 @@ public class AnagramManager
     }
     
     /**
-     * Returns a sorted set of Non-Terminals available in the rule map.
-     *
-     * @return                  A set of non-terminal keys to generate phrases from
+     * Sorts the internal array of Word objects by their canonical ordering.
      */
     public void sortByForm()
     {
@@ -86,20 +75,12 @@ public class AnagramManager
     }
 
     /**
-     * Generates a phrase of words from the given symbol using the rule map.
+     * Picks a random word a canonical form equal to canonical form of the word given.<br>
+     * Ex: [hurrdurr : hdrrrruu] == [durrhurr : hdrrrruu]
      *
-     * @param symbol            The non-terminal string entered by the user
-     * @throws                  IllegalArgumentException if symbol is null or list length &lt; 1
-     * @return                  The symbol given if it is not a non-terminal, otherwise a string of words
-     *                          randomly picked from the terminals of the symbol given.
-     * @pre                     Symbol given must exist as a non-terminal.
-     * @pre                     String must not be empty.
-     * @pre                     String must not be null.
-     * @post                    Will return a string of random terminals from the given
-     *                          non-terminal, assuming the symbol exists as a non-terminal,
-     *                          it contains terminal values to pick from, the syntax rules
-     *                          were followed, and a non-terminal referencing itself does
-     *                          not create an infinite loop.
+     * @param word              The word used to find an anagram
+     * @return                  Random word of matching canonical form, if no match returns
+     *                          empty string
      */
     public String getAnagram(String word)
     {
@@ -113,6 +94,12 @@ public class AnagramManager
         else return "";
     }
     
+    /**
+     * Finds and returns a set of all matching anagrams of the word given.
+     *
+     * @param word              The word used to find anagrams
+     * @return                  A sorted set of all anagrams of the word given
+     */
     public Set<String> getAnagrams(String word)
     {
         String canon = Word.canonicalize(word);
@@ -123,6 +110,12 @@ public class AnagramManager
         return anagrams;
     }
 
+    /**
+     * Returns up to 5 of the first and last Words held in the internal array, displaying
+     * their normal and canonical forms.<br>
+     *
+     * @return                  A string containing the first and last 5 internal Words
+     */
     public String toString()
     {
         String printedWords = "";

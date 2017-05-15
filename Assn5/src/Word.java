@@ -9,7 +9,9 @@
 import java.util.Arrays;
 
 /**
- * This class...
+ * This class manages both the original and canonical forms of a single word,
+ * as well as managing its comparable state for sorting. It also provides a static
+ * method for sorting letters in a word, used by its client object AnagramManager.
  *
  * @author                  Jacob Landowski
  * @version                 %I% %G%
@@ -22,20 +24,10 @@ public class Word implements Comparable<Word>
     String compareForm;
     
     /**
-     * Constructor, takes an unmodifiable list of grammar lines and creates a rule map
-     * out of it, initializes GrammarSolver's random object.
+     * Constructor, takes a String and initializes internal strings representing
+     * both the original form of the string and the canonical version.
      *
-     * @param rules             The list of grammar lines used to populate the ruleMap
-     * @throws                  IllegalArgumentException if list is null or list length &lt; 1
-     * @pre                     List elements must be seperate lines of grammar rules, starting
-     *                          with the non-terminal follow by ::= and its terminals, each AND
-     *                          terminal must be seperated by whitespace and each OR terminal
-     *                          seperated by pipes (|). If non-terminal references itself as a
-     *                          terminal, must include a way to end the loop eventually, such as
-     *                          giving another terminal option with a pipe (|).
-     * @pre                     List must not be empty
-     * @pre                     List must not be null
-     * @post                    Instantiates a GrammarSolver object with initialized rule map
+     * @param word              A string representing the original form of the Word
      */
     public Word(String word)
     {
@@ -45,107 +37,69 @@ public class Word implements Comparable<Word>
     }
     
     /**
-     * Checks to see if the entered symbol exists in the rule map, returns true if so.
+     * Returns the original form of the word.
      *
-     * @param symbol            The non-terminal string entered by the user
-     * @throws                  IllegalArgumentException if symbol is null or list length &lt; 1
-     * @return                  True if symbol is a Non-Terminal, false otherwise
-     * @pre                     String must not be empty
-     * @pre                     String must not be null
+     * @return                  The original form of the word
      */
     public String getWord() { return original; }
     
     /**
-     * Returns a sorted set of Non-Terminals available in the rule map.
+     * Returns the canonical version of the word.
      *
-     * @return                  A set of non-terminal keys to generate phrases from
+     * @return                  The canonical form of the word
      */
     public String getForm() { return canonical; }
     
     /**
-     * Generates a phrase of words from the given symbol using the rule map.
+     * Returns the original and canonical word in this form : [blah=abhl]
      *
-     * @param symbol            The non-terminal string entered by the user
-     * @throws                  IllegalArgumentException if symbol is null or list length &lt; 1
-     * @return                  The symbol given if it is not a non-terminal, otherwise a string of words
-     *                          randomly picked from the terminals of the symbol given.
-     * @pre                     Symbol given must exist as a non-terminal.
-     * @pre                     String must not be empty.
-     * @pre                     String must not be null.
-     * @post                    Will return a string of random terminals from the given
+     * @return                  A string containing the original and canonical
+     *                          form of the word
      */
     public String toString() { return "[" + original + "=" + canonical + "]"; }
     
     /**
-     * Generates a phrase of words from the given symbol using the rule map.
+     * Compares another Word to this Word based on whichever form is currently set to
+     * be compared to.
      *
-     * @param symbol            The non-terminal string entered by the user
-     * @throws                  IllegalArgumentException if symbol is null or list length &lt; 1
-     * @return                  The symbol given if it is not a non-terminal, otherwise a string of words
-     *                          randomly picked from the terminals of the symbol given.
-     * @pre                     Symbol given must exist as a non-terminal.
-     * @pre                     String must not be empty.
-     * @pre                     String must not be null.
-     * @post                    Will return a string of random terminals from the given
+     * @param other             Another Word object to compare against
+     * @return                  A negative or positive number or zero determining equality
+     * @pre                     Must be another Word object
      */
     public int compareTo(Word other) { return compareForm.compareTo(other.getCompareForm()); }
     
     /**
-     * Generates a phrase of words from the given symbol using the rule map.
-     *
-     * @param symbol            The non-terminal string entered by the user
-     * @throws                  IllegalArgumentException if symbol is null or list length &lt; 1
-     * @return                  The symbol given if it is not a non-terminal, otherwise a string of words
-     *                          randomly picked from the terminals of the symbol given.
-     * @pre                     Symbol given must exist as a non-terminal.
-     * @pre                     String must not be empty.
-     * @pre                     String must not be null.
-     * @post                    Will return a string of random terminals from the given
+     * Sets the Word to be compared based on its original form.
      */
     public void compareOriginal() { compareForm = original; }
 
     /**
-     * Generates a phrase of words from the given symbol using the rule map.
-     *
-     * @param symbol            The non-terminal string entered by the user
-     * @throws                  IllegalArgumentException if symbol is null or list length &lt; 1
-     * @return                  The symbol given if it is not a non-terminal, otherwise a string of words
-     *                          randomly picked from the terminals of the symbol given.
-     * @pre                     Symbol given must exist as a non-terminal.
-     * @pre                     String must not be empty.
-     * @pre                     String must not be null.
-     * @post                    Will return a string of random terminals from the given
+     * Sets the Word to be compared based on its canonical form.
      */
     public void compareCanonical() { compareForm = canonical; }
     
     /**
-     * Generates a phrase of words from the given symbol using the rule map.
+     * Returns the current form of the word being used for comparison.
      *
-     * @param symbol            The non-terminal string entered by the user
-     * @throws                  IllegalArgumentException if symbol is null or list length &lt; 1
-     * @return                  The symbol given if it is not a non-terminal, otherwise a string of words
-     *                          randomly picked from the terminals of the symbol given.
-     * @pre                     Symbol given must exist as a non-terminal.
-     * @pre                     String must not be empty.
-     * @pre                     String must not be null.
-     * @post                    Will return a string of random terminals from the given
+     * @return                  Either original form or canonical form based on which
+     *                          is currently set
      */
     public String getCompareForm() { return compareForm; }
     
     /**
-     * Generates a phrase of words from the given symbol using the rule map.
+     * Takes a word and returns a letter-sorted (canonical) version of that word.
      *
-     * @param symbol            The non-terminal string entered by the user
-     * @throws                  IllegalArgumentException if symbol is null or list length &lt; 1
-     * @return                  The symbol given if it is not a non-terminal, otherwise a string of words
-     *                          randomly picked from the terminals of the symbol given.
-     * @pre                     Symbol given must exist as a non-terminal.
-     * @pre                     String must not be empty.
-     * @pre                     String must not be null.
-     * @post                    Will return a string of random terminals from the given
+     * @param word              The word that will be letter-sorted
+     * @return                  The canonical form of the word
+     * @throws                  IllegalArgumentException if string is null or empty
+     * @pre                     String must not be null
+     * @pre                     String must not be empty
+     * @post                    Will return the canonical form of the words
      */
     public static String canonicalize(String word)
     {
+        if(word == null || word.length() < 1) throw new IllegalArgumentException();
+        
         char[] ch = word.toCharArray();
         Arrays.sort(ch);
         return new String(ch);
