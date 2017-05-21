@@ -54,7 +54,7 @@ public class PremiumCard extends Card
     // getCost()
 
 //=================================================================
-//-----------------------JAVA UTILITIES----------------------------
+//-----------------------JAVA-UTILITIES----------------------------
 //=================================================================
 
     /**
@@ -63,7 +63,7 @@ public class PremiumCard extends Card
      * @return                  String in form of "{{power/toughness}}"
      */
     @Override
-    public String toString() { return "{{" + this.getPower() + "/" + this.getToughness() + "}}"; }
+    public String toString() { return "{{" + getPower() + "/" + getToughness() + "}}"; }
     
 //=================================================================
 //----------------------------GENERAL------------------------------

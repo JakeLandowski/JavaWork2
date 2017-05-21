@@ -60,12 +60,12 @@ public class CardArrayList
     /**
      * Returns the current number of CardArrayList elements.
      *
-     * @ returns                size
+     * @return                  size
      */
     public int size() { return size; }
 
 //=================================================================
-//-----------------------JAVA UTILITIES----------------------------
+//-----------------------JAVA-UTILITIES----------------------------
 //=================================================================
     
     /**
@@ -77,7 +77,7 @@ public class CardArrayList
     public String toString()
     {                           //  ROUGH OVER-ESTIMATATION OF CHARS NEEDED
         StringBuilder str = new StringBuilder(size * 13 + 8);
-        String end = (size > 0) ? internalArray[size - 2] + " :" : " :";
+        String end = (size > 0) ? internalArray[size - 1] + " :" : " :";
         
         str.append("[0: ");
         
@@ -133,6 +133,7 @@ public class CardArrayList
     /**
      * Returns the Card object found at given index
      *
+     * @param index             The index from which to return the Card Object
      * @return                  Card object
      * @throws                  IndexOutOfBoundsException if index &lt; 0 or index &gt;= size
      * @pre                     Index given must be within current CardArrayList bounds
@@ -148,6 +149,7 @@ public class CardArrayList
     /**
      * Returns the index of the first Card object equal to the Card given
      *
+     * @param card              The Card object to search for
      * @return                  The index of the Card
      * @post                    Returns the Card index or -1 if not found
      */
@@ -165,6 +167,8 @@ public class CardArrayList
      * Inserts the given Card object at the specified index location, shifting over all Card
      * objects.
      *
+     * @param index             The index to insert the Card object
+     * @param card              The Card object to insert
      * @throws                  IndexOutOfBoundsException if index &lt; 0 or index &gt;= size
      * @pre                     Index given must be within current CardArrayList bounds
      * @post                    Inserts the Card Object at given index
@@ -191,6 +195,7 @@ public class CardArrayList
     /**
      * Removes and returns the Card object at the given index, and shifts all other Cards down.
      *
+     * @param index             The index at which to remove the Card object
      * @return                  The Card Object at given index
      * @throws                  IndexOutOfBoundsException if index &lt; 0 or index &gt;= size
      * @pre                     Index given must be within current CardArrayList bounds
@@ -214,7 +219,7 @@ public class CardArrayList
      */
     public void sort()
     {
-        Arrays.sort(internalArray);
+        Arrays.sort(internalArray, 0, size);
         reverse();
     }
     
@@ -242,7 +247,7 @@ public class CardArrayList
             firstIndex = Card.randomInt(0, size - 1);
             
             do secondIndex = Card.randomInt(0, size - 1);
-                while(firstIndex != secondIndex);
+                while(firstIndex == secondIndex);
                 
             swap(firstIndex, secondIndex);
         }
@@ -292,5 +297,9 @@ public class CardArrayList
 //=================================================================
 //-----------------------------DEBUG-------------------------------
 //=================================================================
-
+    
+    /*public void testExpand()
+    {
+        System.out.println("Internal array's length : " + internalArray.length);
+    }*/
 } // END CLASS
