@@ -1,8 +1,8 @@
 //	Jacob Landowski, CS 145, Spring 2017, Section A, #2723
 //	Programming Assignment #6, 5/20/17
-//	Object Class =>
-//  Client Class =>
-//  Dependency   =>
+//	Class   => Card
+//  Used By => CardArrayMaster, CardArrayList
+//  Needs   =>
 //
 //  Hosted Javadocs => http://jlandowski.greenrivertech.net/Javadocs/IT145/assn6/
 
@@ -10,7 +10,7 @@
 import java.util.Random;
 
 /**
- * This...
+ * ..
  *
  * @author                  Jacob Landowski
  * @version                 %I% %G%
@@ -38,9 +38,8 @@ public class Card implements Comparable<Card>
     public Card()
     {
             //  GET RANDOM FROM MIN TO MAX INCLUSIVE
-        this.power     = rand.nextInt(MAX_POWER - (MIN_POWER - 1)) + MIN_POWER;
-        this.toughness = rand.nextInt(MAX_TOUGHNESS - (MIN_TOUGHNESS - 1)) + MIN_TOUGHNESS;
-        System.out.println(this + " constructor called, " + this.power + " " + this.toughness);
+        power     = randomInt(MIN_POWER,     MAX_POWER);
+        toughness = randomInt(MIN_TOUGHNESS, MAX_TOUGHNESS);
     }
 
     /**
@@ -88,14 +87,14 @@ public class Card implements Comparable<Card>
      *
      * @return                  The card's power level
      */
-    public int getPower() { return this.power; }
+    public int getPower() { return power; }
     
     /**
      * Getter, returns the card's toughness level
      *
      * @return                  The card's toughness level
      */
-    public int getToughness() { return this.toughness; }
+    public int getToughness() { return toughness; }
     
     /**
      * Getter, returns the card's cost based on its power and toughness
@@ -108,7 +107,7 @@ public class Card implements Comparable<Card>
                     (
                         Math.sqrt
                         (
-                            this.power * 1.5 + this.toughness * 0.9
+                            power * 1.5 + toughness * 0.9
                         )
                     );
     }
@@ -122,7 +121,7 @@ public class Card implements Comparable<Card>
      *
      * @return                  String in form of "[power/toughness]"
      */
-    public String toString() { return "[" + this.power + "/" + this.toughness + "]"; }
+    public String toString() { return "[" + power + "/" + toughness + "]"; }
     
     /**
      * Compares by cost first, then power, then toughness
@@ -131,13 +130,13 @@ public class Card implements Comparable<Card>
      */
     public int compareTo(Card other)
     {
-        int costDiff = this.getCost() - other.getCost();
+        int costDiff = getCost() - other.getCost();
         
         if(costDiff == 0)
         {
-            int powerDiff = this.getPower() - other.getPower();
+            int powerDiff = getPower() - other.getPower();
             
-            if(powerDiff == 0) return this.getToughness() - other.getToughness();
+            if(powerDiff == 0) return getToughness() - other.getToughness();
             
             return powerDiff;
         }
@@ -150,27 +149,47 @@ public class Card implements Comparable<Card>
 //=================================================================
     
     /**
-     * Permanently lowers this card's current power and toughness by 10%, rounded up.
+     * Permanently lowers this card's current power and toughness by 10%, rounded.
      */
-    public void weaken()
+    public void weaken() // Documentation doesn't specify if should be rounded up or down.
     {
-        this.power     = (int) Math.ceil(this.power * 0.9);
-        this.toughness *= 0.9;
+        power     = (int) Math.round(power     * 0.9);
+        toughness = (int) Math.round(toughness * 0.9);
     }
     
     /**
-     * Permanently increases this card's current power and toughness by 10%, rounded up.
+     * Permanently increases this card's current power and toughness by 10%, rounded.
      */
     public void boost()
     {
-        this.power     *= 1.1;
-        this.toughness *= 1.1;
+        power     = (int) Math.round(power     * 1.1);
+        toughness = (int) Math.round(toughness * 1.1);
     }
      
 //=================================================================
 //------------------------PRIVATE-HELPERS--------------------------
 //=================================================================
 
+//=================================================================
+//-------------------------STATIC-HELPERS--------------------------
+//=================================================================
+    
+    /**
+     * Returns a random int between min and max inclusive.
+     *
+     * @param min               Minimum int value
+     * @param max               Maximum int value
+     * @throws                  IllegalArgumentException if min &gt; max
+     * @return                  An integer between min and max inclusive
+     * @pre                     Min must be less or equal to Max
+     * @post                    Returns an int between min and max inclusive
+     */
+    public static int randomInt(int min, int max)
+    {
+        if(min > max) throw new IllegalArgumentException("Min cannot be greater than max");
+        
+        return rand.nextInt(max - (min - 1)) + min;
+    }
     
 //=================================================================
 //-----------------------------DEBUG-------------------------------

@@ -25,10 +25,10 @@ public class CardArrayMaster {
      SO.println(masterList1);
 
      // STAGE 2
-     // Can we add a premium card?
-     // masterList1.add(new PremiumCard(100));
-     // SO.print("Premium Card   : ");
-     // SO.println(masterList1);
+     //Can we add a premium card?
+     masterList1.add(new PremiumCard(100));
+     SO.print("Premium Card   : ");
+     SO.println(masterList1);
 
      // STAGE 3
      // Can we add cars in the middle?

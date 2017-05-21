@@ -1,14 +1,15 @@
 //	Jacob Landowski, CS 145, Spring 2017, Section A, #2723
 //	Programming Assignment #6, 5/20/17
-//	Object Class =>
-//  Client Class =>
-//  Dependency   =>
+//	Class   => PremiumCard
+//  Used By => CardArrayMaster, CardArrayList
+//  Needs   => Card
 //
 //  Hosted Javadocs => http://jlandowski.greenrivertech.net/Javadocs/IT145/assn6/
 
 
 /**
- * This...
+ * This class represents a PremiumCard which is just a Card object
+ * that has a different toString display.
  *
  * @author                  Jacob Landowski
  * @version                 %I% %G%
