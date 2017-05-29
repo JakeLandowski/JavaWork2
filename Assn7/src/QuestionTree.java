@@ -6,7 +6,8 @@
 //
 //  Hosted Javadocs => http://jlandowski.greenrivertech.net/Javadocs/IT145/assn7/
 
-
+import java.io.PrintStream;
+import java.util.Scanner;
 
 /**
  * This class instantiates a Binary Tree of Questions and Answers...
@@ -20,6 +21,7 @@ public class QuestionTree
 
     private UserInterface ui;
     private QuestionNode root;
+    private int games, wins;
 
 //=================================================================
 //-------------------------CONSTRUCTORS----------------------------
@@ -58,12 +60,8 @@ public class QuestionTree
      */
     public void play()
     {
-        //  LOOP TREE ASKING QUESTIONS UNTIL REACH ANSWER LEAF NODE
-        //  IF COMPUTER WINS PRINT WIN MESSAGE
-        //  IF COMPUTER LOSES PRINT LOSE MESSAGE
-        //  IF COMPUTER LOSES ASK FOR CORRECT OBJECT
-        //  ASK FOR QUESTIONS TO DISTINGUISH CORRECT OBJECT
-        //  ASK IF CORRECT OBJECT IS YES OR NOR FOR NEW QUESTION
+        games++;
+        root = findAnswer(root);
     }
     
     /**
@@ -80,11 +78,7 @@ public class QuestionTree
     {
         if(output == null) throw new IllegalArgumentException("QuestionTree needs a PrintStream");
         
-        //  STORE CURRENT TREE STATE TO OUTPUT FILE
-        //  DONT SAVE NUMBER OF GAMES PLAYED/WON
-        //  EACH LINE = NODE
-        //  PREFIX LINE WITH Q: OR A: TO DIFFERENTIATE
-        //  LIST NODES IN PREFIX ORDER
+        archiveNodeText(root, output);
     }
     
     /**
@@ -101,9 +95,7 @@ public class QuestionTree
     {
         if(input == null) throw new IllegalArgumentException("QuestionTree needs a Scanner.");
         
-        //  REPLACE CURRENT TREE WITH NEW TREE FROM PARSING SAVED FILE
-        //  PASSED SCANNER WILL HOLD FILE
-        //  CALL NEXTLINE
+        root = createNode(input);
     }
 
 //=================================================================
@@ -115,21 +107,90 @@ public class QuestionTree
      *
      * @return                  An integer
      */
-    public int totalGames()
-    {
-        return 0;
-    }
+    public int totalGames() { return games; }
     
     /**
      * Returns a random int between min and max inclusive.
      *
      * @return                  An integer
      */
-    public int gamesWon()
+    public int gamesWon() { return wins; }
+
+
+//=================================================================
+//------------------------PRIVATE-HELPERS--------------------------
+//=================================================================
+
+    private QuestionNode findAnswer(QuestionNode node)
     {
-        return 0;
+            //  IS ANSWER
+        if(node.left == null || node.right == null) node = checkAnswer(node);
+        else
+        {       //  IS QUESTION SO ASK
+            ui.print(node.text);
+            
+            if ( ui.nextBoolean() )  node.left = findAnswer(node.left);
+            else                    node.right = findAnswer(node.right);
+        }
+        
+        return node;
+    }
+    
+    private QuestionNode checkAnswer(QuestionNode answer)
+    {
+        ui.print("\nWould your object happen to be " + answer.text + "?");
+            
+        if( ui.nextBoolean() )
+        {
+            wins++;
+            ui.println("I win!");
+            return answer;
+        }
+        
+        ui.print("\nI lose. What is your object?");
+        QuestionNode newAnswer = new QuestionNode( ui.nextLine() );
+        
+        ui.print("\nType a yes/no question to distinguish your item from " + answer.text);
+        QuestionNode question = new QuestionNode( ui.nextLine() );
+        
+        ui.print("\nAnd what is the answer for your object?");
+        boolean yes = ui.nextBoolean();
+        
+        question.left  = (yes) ? newAnswer : answer;
+        question.right = (yes) ? answer    : newAnswer;
+        
+        return question;
     }
 
+        // this is my favorite one, i love recursion
+    private QuestionNode createNode(Scanner lines)
+    {
+        if( !lines.hasNextLine() ) throw new IllegalArgumentException("Missing line in Scanner");
+        
+        String text = lines.nextLine();
+        QuestionNode node = new QuestionNode(text.substring(2));
+        
+        if( text.startsWith("Q:") )
+        {
+            node.left  = createNode(lines);
+            node.right = createNode(lines);
+        }
+        
+        return node;
+    }
+    
+    private void archiveNodeText(QuestionNode node, PrintStream file)
+    {
+        boolean isQuestion = (node.left != null && node.right != null);
+        
+        file.println( (isQuestion ? "Q:" : "A:") + node.text);
+        
+        if(isQuestion)
+        {
+            archiveNodeText(node.left, file);
+            archiveNodeText(node.right, file);
+        }
+    }
 
 //=================================================================
 //-----------------------PRIVATE-CLASSES---------------------------
@@ -138,8 +199,7 @@ public class QuestionTree
     private class QuestionNode
     {
         String text;
-        QuestionNode left;
-        QuestionNode right;
+        QuestionNode left, right;
         
         QuestionNode() { throw new IllegalStateException("Node must be given a Question or Answer"); }
         
@@ -147,15 +207,10 @@ public class QuestionTree
         
     } // END CLASS
 
-
 //=================================================================
 //-----------------------JAVA-UTILITIES----------------------------
 //=================================================================
    
-//=================================================================
-//------------------------PRIVATE-HELPERS--------------------------
-//=================================================================
-
 //=================================================================
 //-------------------------STATIC-HELPERS--------------------------
 //=================================================================

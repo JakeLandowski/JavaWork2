@@ -1,0 +1,37 @@
+Q:Is it pointy?
+Q:Is it gangster?
+Q:Is it old?
+A:Pyramid
+A:Knife
+Q:Is it fabulous?
+A:Unicorn
+Q:Is it cute?
+A:Bee
+A:Pen
+Q:Is it metal?
+Q:Is it useful?
+A:Smart Phone
+A:Can
+Q:Is it soft?
+Q:Can you wear it?
+Q:Does it stain?
+A:Mustard
+Q:Is it a part of you?
+A:Hair
+A:Sock
+Q:Can you eat it?
+Q:Is it sweet?
+A:Donut
+A:Hamburger
+Q:Can it kill you?
+Q:Does it have magic?
+A:Beholder
+A:Cat
+A:Butt
+Q:Is it dope?
+Q:Is it hot?
+A:Fire
+A:Hearthstone
+Q:Is it made of wood?
+A:Door
+A:Apple
