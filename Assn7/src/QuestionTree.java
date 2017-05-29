@@ -1,5 +1,5 @@
 //	Jacob Landowski, CS 145, Spring 2017, Section A, #2723
-//	Programming Assignment #7, 5/20/17
+//	Programming Assignment #7, 5/28/17
 //	Class   => QuestionTree
 //  Used By => QuestionMain, VaderMain
 //  Needs   => QuestionNode(included)
@@ -10,7 +10,10 @@ import java.io.PrintStream;
 import java.util.Scanner;
 
 /**
- * This class instantiates a Binary Tree of Questions and Answers...
+ * This class instantiates a Binary Tree of Questions and Answers, as well as contains
+ * its helper class QuestionNode. The QuestionTree will maintain a Binary Tree of questions
+ * either initialized with a default answer or loaded from a saved file, then populates the
+ * tree during runtime as the user adds new questions and answers.
  *
  * @author                  Jacob Landowski
  * @version                 %I% %G%
@@ -28,14 +31,14 @@ public class QuestionTree
 //=================================================================
     
     /**
-     * Initializes ahe Question
+     * Initializes the question Binary Tree with a single default answer and stores the
+     * given UserInterface.
      *
-     * @param min               Minimum int value
-     * @param max               Maximum int value
-     * @throws                  IllegalArgumentException if min &gt; max
-     * @return                  An integer between min and max inclusive
-     * @pre                     Min must be less or equal to Max
-     * @post                    Returns an int between min and max inclusive
+     * @param ui                The UserInterface the QuestionTree will use
+     * @throws                  IllegalArgumentException if ui is null
+     * @pre                     UserInterface must exist and not be null, must contain the
+     *                          following methods: nextBoolean(), nextLine(), println(), print()
+     * @post                    Populates a tree with a default answer and stores the given ui
      */
     public QuestionTree (UserInterface ui)
     {
@@ -49,14 +52,9 @@ public class QuestionTree
 //=================================================================
     
     /**
-     * Returns a random int between min and max inclusive.
-     *
-     * @param min               Minimum int value
-     * @param max               Maximum int value
-     * @throws                  IllegalArgumentException if min &gt; max
-     * @return                  An integer between min and max inclusive
-     * @pre                     Min must be less or equal to Max
-     * @post                    Returns an int between min and max inclusive
+     * Starts a round of 20 Questions, will continue guessing until the computer has
+     * reached an answer, if that answer is wrong the computer will prompt the user for
+     * a new answer and a corresponding question and handle the data changes internally.
      */
     public void play()
     {
@@ -65,14 +63,12 @@ public class QuestionTree
     }
     
     /**
-     * Returns a random int between min and max inclusive.
+     * Archives the questions and answers in the current tree to a file of specified name.
      *
-     * @param min               Minimum int value
-     * @param max               Maximum int value
-     * @throws                  IllegalArgumentException if min &gt; max
-     * @return                  An integer between min and max inclusive
-     * @pre                     Min must be less or equal to Max
-     * @post                    Returns an int between min and max inclusive
+     * @param output            The PrintStream pointing to the file
+     * @throws                  IllegalArgumentException if the PrintStream is null
+     * @pre                     PrintStream must contain a file and not be null
+     * @post                    Saves the tree data to the text file
      */
     public void save(PrintStream output)
     {
@@ -82,14 +78,12 @@ public class QuestionTree
     }
     
     /**
-     * Returns a random int between min and max inclusive.
+     * Takes a file of questions and answers and creates a Binary Tree out of it.
      *
-     * @param min               Minimum int value
-     * @param max               Maximum int value
-     * @throws                  IllegalArgumentException if min &gt; max
-     * @return                  An integer between min and max inclusive
-     * @pre                     Min must be less or equal to Max
-     * @post                    Returns an int between min and max inclusive
+     * @param input             The Scanner containing the file
+     * @throws                  IllegalArgumentException if Scanner is null or if missing a line
+     * @pre                     Scanner must contain a file and not be null or missing lines
+     * @post                    Prepares a tree of the questions and answers
      */
     public void load(Scanner input)
     {
@@ -103,16 +97,16 @@ public class QuestionTree
 //=================================================================
     
     /**
-     * Returns a random int between min and max inclusive.
+     * Returns a int representing the number of games played.
      *
-     * @return                  An integer
+     * @return                  The current number of games played
      */
     public int totalGames() { return games; }
     
     /**
-     * Returns a random int between min and max inclusive.
+     * Returns a int representing the number of computer wins.
      *
-     * @return                  An integer
+     * @return                  The current number of computer wins
      */
     public int gamesWon() { return wins; }
 
